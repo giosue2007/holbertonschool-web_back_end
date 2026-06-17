@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 """
-Module for task 0.
+Module for task 2.
 """
 import asyncio
-import random
-from typing import Generator
+import time
+
+async_comprehension = __import__('1-async_comprehension').async_comprehension
 
 
-async def async_generator() -> Generator[float, None, None]:
+async def measure_runtime() -> float:
     """
-    Loop 10 times, wait 1 second each time, and yield a random number.
+    Measure the total runtime of executing async_comprehension
+    four times in parallel.
     """
-    for _ in range(10):
-        await asyncio.sleep(1)
-        yield random.uniform(0, 10)
+    start_time = time.perf_counter()
+    
+    tasks = [async_comprehension() for _ in range(4)]
+    await asyncio.gather(*tasks)
+    
+    end_time = time.perf_counter()
+    return end_time - start_time
