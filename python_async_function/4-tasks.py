@@ -1,21 +1,15 @@
-4. Tasks
-Take the code from wait_n and alter it into a new function task_wait_n. The code is nearly identical to wait_n except task_wait_random is being called.
-
-bob@dylan:~$ cat 4-main.py
 #!/usr/bin/env python3
-
+"""Module for task_wait_n."""
 import asyncio
 
-task_wait_n = __import__('4-tasks').task_wait_n
+task_wait_random = __import__('3-tasks').task_wait_random
 
-n = 5
-max_delay = 6
-print(asyncio.run(task_wait_n(n, max_delay)))
 
-bob@dylan:~$ ./4-main.py
-[0.2261658205652346, 1.1942770588220557, 1.8410422186086628, 2.1457353803430523, 4.002505454641153]
-Repo:
-
-GitHub repository: holbertonschool-web_back_end
-Directory: python_async_function
-File: 4-tasks.py
+async def task_wait_n(n: int, max_delay: int) -> list:
+    """Run task_wait_random n times and return sorted delays."""
+    results = []
+    tasks = [task_wait_random(max_delay) for _ in range(n)]
+    for coro in asyncio.as_completed(tasks):
+        delay = await coro
+        results.append(delay)
+    return results
